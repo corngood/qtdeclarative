@@ -291,6 +291,7 @@ private slots:
     void jsOwnedObjectsDeletedOnEngineDestroy();
     void numberParsing();
     void stringParsing();
+    void optimisedLocalFunctions();
 
 private:
     static void propertyVarWeakRefCallback(v8::Persistent<v8::Value> object, void* parameter);
@@ -7422,6 +7423,18 @@ void tst_qqmlecmascript::stringParsing()
         QObject *object = component.create();
         QVERIFY(object == 0);
     }
+}
+
+void tst_qqmlecmascript::optimisedLocalFunctions()
+{
+    QString file("optimisedLocalFunctions.qml");
+    QQmlComponent component(&engine, testFileUrl(file));
+    QObject *object = component.create();
+    QVERIFY(object);
+    QCOMPARE(object->property("v1").toString(), QLatin1String("variable"));
+    QCOMPARE(object->property("v2").toString(), QLatin1String("variable2"));
+    QCOMPARE(object->property("v3").toString(), QLatin1String("func"));
+    delete object;
 }
 
 QTEST_MAIN(tst_qqmlecmascript)
