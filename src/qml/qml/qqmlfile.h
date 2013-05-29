@@ -110,6 +110,7 @@ public:
     static QString bundleFileName(const QString &, QQmlEngine *);
     static QString bundleFileName(const QUrl &, QQmlEngine *);
 
+    static bool isScriptFileName(const QString &fileName);
 private:
     Q_DISABLE_COPY(QQmlFile)
     QQmlFilePrivate *d;

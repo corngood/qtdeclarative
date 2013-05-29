@@ -76,6 +76,8 @@
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdatetime.h>
 #include <QtCore/qvarlengtharray.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qtextstream.h>
 #include <QtQml/qjsvalue.h>
 
 QT_BEGIN_NAMESPACE
@@ -1178,8 +1180,7 @@ void QQmlScriptData::initialize(QQmlEngine *engine)
     QV8Engine *v8engine = ep->v8engine();
 
     // If compilation throws an error, a surrounding v8::TryCatch will record it.
-    v8::Local<v8::Script> program = v8engine->qmlModeCompile(m_programSource.constData(),
-                                                             m_programSource.length(), urlString, 1);
+    v8::Local<v8::Script> program = v8engine->qmlModeCompile(m_programSource.constData(), m_programSource.length(), urlString, 1);
     if (program.IsEmpty())
         return;
 

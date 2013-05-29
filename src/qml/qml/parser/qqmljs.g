@@ -62,6 +62,9 @@
 %token T_COMMENT "comment"
 %token T_COMPATIBILITY_SEMICOLON
 
+%token T_STAB "->"
+%token T_COFFEESCRIPT "coffeescript expression"
+
 --- context keywords.
 %token T_PUBLIC "public"
 %token T_IMPORT "import"
@@ -820,6 +823,26 @@ case $rule_number:
         sym(1).UiQualifiedId, sym(3).Statement);
     node->colonToken = loc(2);
     sym(1).Node = node;
+}   break;
+./
+
+CoffeeScriptExpression: T_COFFEESCRIPT ;
+/.
+case $rule_number: {
+  AST::CoffeeScriptExpression *node = new (pool) AST::CoffeeScriptExpression(stringRef(1));
+  node->token = loc(1);
+  sym(1).Node = node;
+} break;
+./
+
+UiObjectMember: UiQualifiedId T_STAB CoffeeScriptExpression ;
+/.
+case $rule_number:
+{
+	AST::UiScriptBinding *node = new (pool) AST::UiScriptBinding(
+		sym(1).UiQualifiedId, sym(3).Statement);
+	node->colonToken = loc(2);
+	sym(1).Node = node;
 }   break;
 ./
 

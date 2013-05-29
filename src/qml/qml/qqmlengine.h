@@ -145,6 +145,9 @@ public:
     enum ObjectOwnership { CppOwnership, JavaScriptOwnership };
     static void setObjectOwnership(QObject *, ObjectOwnership);
     static ObjectOwnership objectOwnership(QObject *);
+
+    static QString translateScript(QString const &source, QString const &language);
+
 protected:
     QQmlEngine(QQmlEnginePrivate &dd, QObject *p);
     virtual bool event(QEvent *);

@@ -437,6 +437,7 @@ public:
         ThreadData();
         ~ThreadData();
         v8::Isolate* isolate;
+        v8::Locker* locker;
         bool gcPrologueCallbackRegistered;
         QIntrusiveList<QV8GCCallback::Node, &QV8GCCallback::Node::node> gcCallbackNodes;
     };

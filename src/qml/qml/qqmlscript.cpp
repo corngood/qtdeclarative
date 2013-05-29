@@ -41,6 +41,7 @@
 
 #include "qqmlscript_p.h"
 
+#include "qqmlfile.h"
 #include "parser/qqmljsengine_p.h"
 #include "parser/qqmljsparser_p.h"
 #include "parser/qqmljslexer_p.h"
@@ -812,7 +813,7 @@ bool ProcessAST::visit(AST::UiImport *node)
     if (!node->fileName.isNull()) {
         uri = node->fileName.toString();
 
-        if (uri.endsWith(QLatin1String(".js"))) {
+        if (QQmlFile::isScriptFileName(uri)) {
             import.type = QQmlScript::Import::Script;
         } else {
             import.type = QQmlScript::Import::File;
@@ -1508,8 +1509,8 @@ QQmlScript::Parser::JavaScriptMetaData QQmlScript::Parser::extractMetaData(QStri
     QQmlScript::Object::ScriptBlock::Pragmas &pragmas = rv.pragmas;
 
     const QString pragma(QLatin1String("pragma"));
-    const QString js(QLatin1String(".js"));
     const QString library(QLatin1String("library"));
+    const QString language(QLatin1String("language"));
 
     QQmlJS::Lexer l(0);
     l.setCode(script, 0);
@@ -1544,7 +1545,7 @@ QQmlScript::Parser::JavaScriptMetaData QQmlScript::Parser::extractMetaData(QStri
 
                 QString file = l.tokenText();
 
-                if (!file.endsWith(js)) {
+                if (!QQmlFile::isScriptFileName(file)) {
                     importError.setDescription(QCoreApplication::translate("QQmlParser","Imported file must be a script"));
                     importError.setColumn(l.tokenStartColumn());
                     *error = importError;
@@ -1692,14 +1693,20 @@ QQmlScript::Parser::JavaScriptMetaData QQmlScript::Parser::extractMetaData(QStri
             CHECK_LINE;
 
             QString pragmaValue = script.mid(l.tokenOffset(), l.tokenLength());
-            int endOffset = l.tokenLength() + l.tokenOffset();
 
             if (pragmaValue == library) {
                 pragmas |= QQmlScript::Object::ScriptBlock::Shared;
-                replaceWithSpace(script, startOffset, endOffset - startOffset);
+            } else if (pragmaValue == language) {
+                token = l.lex();
+                CHECK_TOKEN(T_STRING_LITERAL);
+                rv.language = l.tokenText();
+                pragmas |= QQmlScript::Object::ScriptBlock::Language;
             } else {
                 return rv;
             }
+
+            int endOffset = l.tokenLength() + l.tokenOffset();
+            replaceWithSpace(script, startOffset, endOffset - startOffset);
 
             token = l.lex();
             if (l.tokenStartLine() == startLine)

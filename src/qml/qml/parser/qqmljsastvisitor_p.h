@@ -149,6 +149,9 @@ public:
     virtual bool visit(NestedExpression *) { return true; }
     virtual void endVisit(NestedExpression *) {}
 
+    virtual bool visit(CoffeeScriptExpression *) { return true; }
+    virtual void endVisit(CoffeeScriptExpression *) {}
+
     virtual bool visit(IdentifierPropertyName *) { return true; }
     virtual void endVisit(IdentifierPropertyName *) {}
 

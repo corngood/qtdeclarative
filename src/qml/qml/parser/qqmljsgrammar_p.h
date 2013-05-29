@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Toolkit.
@@ -63,16 +63,17 @@ class QQmlJSGrammar
 public:
   enum VariousConstants {
     EOF_SYMBOL = 0,
-    REDUCE_HERE = 104,
-    SHIFT_THERE = 103,
+    REDUCE_HERE = 106,
+    SHIFT_THERE = 105,
     T_AND = 1,
     T_AND_AND = 2,
     T_AND_EQ = 3,
-    T_AS = 92,
+    T_AS = 94,
     T_AUTOMATIC_SEMICOLON = 62,
     T_BREAK = 4,
     T_CASE = 5,
     T_CATCH = 6,
+    T_COFFEESCRIPT = 91,
     T_COLON = 7,
     T_COMMA = 8,
     T_COMMENT = 88,
@@ -90,19 +91,19 @@ public:
     T_EQ = 17,
     T_EQ_EQ = 18,
     T_EQ_EQ_EQ = 19,
-    T_ERROR = 96,
+    T_ERROR = 98,
     T_FALSE = 83,
-    T_FEED_JS_EXPRESSION = 100,
-    T_FEED_JS_PROGRAM = 102,
-    T_FEED_JS_SOURCE_ELEMENT = 101,
-    T_FEED_JS_STATEMENT = 99,
-    T_FEED_UI_OBJECT_MEMBER = 98,
-    T_FEED_UI_PROGRAM = 97,
+    T_FEED_JS_EXPRESSION = 102,
+    T_FEED_JS_PROGRAM = 104,
+    T_FEED_JS_SOURCE_ELEMENT = 103,
+    T_FEED_JS_STATEMENT = 101,
+    T_FEED_UI_OBJECT_MEMBER = 100,
+    T_FEED_UI_PROGRAM = 99,
     T_FINALLY = 20,
     T_FOR = 21,
     T_FUNCTION = 22,
     T_GE = 23,
-    T_GET = 94,
+    T_GET = 96,
     T_GT = 24,
     T_GT_GT = 25,
     T_GT_GT_EQ = 26,
@@ -110,7 +111,7 @@ public:
     T_GT_GT_GT_EQ = 28,
     T_IDENTIFIER = 29,
     T_IF = 30,
-    T_IMPORT = 91,
+    T_IMPORT = 93,
     T_IN = 31,
     T_INSTANCEOF = 32,
     T_LBRACE = 33,
@@ -130,7 +131,7 @@ public:
     T_NOT_EQ_EQ = 46,
     T_NULL = 81,
     T_NUMERIC_LITERAL = 47,
-    T_ON = 93,
+    T_ON = 95,
     T_OR = 48,
     T_OR_EQ = 49,
     T_OR_OR = 50,
@@ -138,7 +139,7 @@ public:
     T_PLUS_EQ = 52,
     T_PLUS_PLUS = 53,
     T_PROPERTY = 66,
-    T_PUBLIC = 90,
+    T_PUBLIC = 92,
     T_QUESTION = 54,
     T_RBRACE = 55,
     T_RBRACKET = 56,
@@ -149,8 +150,9 @@ public:
     T_RETURN = 59,
     T_RPAREN = 60,
     T_SEMICOLON = 61,
-    T_SET = 95,
+    T_SET = 97,
     T_SIGNAL = 67,
+    T_STAB = 90,
     T_STAR = 63,
     T_STAR_EQ = 64,
     T_STRING_LITERAL = 65,
@@ -168,15 +170,15 @@ public:
     T_XOR = 79,
     T_XOR_EQ = 80,
 
-    ACCEPT_STATE = 655,
-    RULE_COUNT = 351,
-    STATE_COUNT = 656,
-    TERMINAL_COUNT = 105,
-    NON_TERMINAL_COUNT = 108,
+    ACCEPT_STATE = 658,
+    RULE_COUNT = 353,
+    STATE_COUNT = 659,
+    TERMINAL_COUNT = 107,
+    NON_TERMINAL_COUNT = 109,
 
-    GOTO_INDEX_OFFSET = 656,
-    GOTO_INFO_OFFSET = 2970,
-    GOTO_CHECK_OFFSET = 2970
+    GOTO_INDEX_OFFSET = 659,
+    GOTO_INFO_OFFSET = 3056,
+    GOTO_CHECK_OFFSET = 3056
   };
 
   static const char  *const    spell [];

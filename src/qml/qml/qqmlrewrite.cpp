@@ -42,6 +42,8 @@
 #include "qqmlrewrite_p.h"
 
 #include <private/qqmlglobal_p.h>
+#include <private/qqmlengine_p.h>
+#include <private/qscriptisolate_p.h>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qcoreapplication.h>
@@ -331,6 +333,16 @@ bool RewriteBinding::visit(AST::ExpressionStatement *ast)
     return false;
 }
 
+bool RewriteBinding::visit(AST::CoffeeScriptExpression *ast)
+{
+    QString value = QQmlEngine::translateScript(QString(QLatin1String("return (%1)")).arg(ast->value.toString()), QLatin1String("coffeescript"));
+    const unsigned position = ast->firstSourceLocation().begin() - _position;
+    const unsigned length = ast->token.length;
+    _writer->replace(position, length, value);
+
+    return false;
+}
+
 bool RewriteBinding::visit(AST::StringLiteral *ast)
 {
     rewriteStringLiteral(ast, _code, _position, _writer);
@@ -511,6 +523,17 @@ bool RewriteSignalHandler::visit(AST::IdentifierExpression *e)
     static const QString argumentsString = QStringLiteral("arguments");
     if (_parameterNames.contains(e->name) || e->name == argumentsString)
         _parameterAccess = ParametersAccessed;
+    return false;
+}
+
+bool RewriteSignalHandler::visit(AST::CoffeeScriptExpression *ast)
+{
+    QString value = QQmlEngine::translateScript(ast->value.toString(), QLatin1String("coffeescript"));
+    const unsigned position = ast->firstSourceLocation().begin() - _position;
+    const unsigned length = ast->token.length;
+    _writer->replace(position, length, value);
+    _parameterAccess = ParametersAccessed;
+
     return false;
 }
 

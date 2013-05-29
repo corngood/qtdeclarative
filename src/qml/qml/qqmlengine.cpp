@@ -2301,4 +2301,87 @@ bool QQml_isFileCaseCorrect(const QString &fileName, int lengthIn /* = -1 */)
     QQmlEngine::contextForObject(object).
 */
 
+#include "coffee-script.inl"
+
+class _coffeeScriptEngine
+{
+    v8::Isolate *isolate;
+    v8::Persistent<v8::Context> context;
+    v8::Persistent<v8::Function> compiler;
+
+    QV8StringWrapper stringWrapper;
+
+public:
+    _coffeeScriptEngine()
+    {
+        QString compilerSource =
+                QLatin1String("(function() { ") +
+                QString::fromLatin1(reinterpret_cast<char const*>(coffeeScript_source), sizeof(coffeeScript_source)) +
+                QLatin1String("; var c = this.CoffeeScript.compile; return function(script) { return c(script, {bare: true}) } }).call({})");
+
+        isolate = v8::Isolate::New ();
+
+        {
+            v8::Locker _l(isolate);
+            v8::Isolate::Scope _i(isolate);
+
+            context = v8::Context::New();
+
+            v8::Context::Scope _c(context);
+
+            stringWrapper.init();
+
+            {
+                v8::HandleScope _h;
+
+                v8::Local<v8::Script> script = v8::Script::Compile(stringWrapper.toString(compilerSource),
+                                                                   NULL, NULL, v8::Handle<v8::String>());
+
+                v8::TryCatch tc;
+
+                compiler = qPersistentNew<v8::Function>(script->Run().As<v8::Function>());
+
+                Q_ASSERT(!tc.HasCaught());
+            }
+
+            stringWrapper.init();
+        }
+    }
+
+    QString compile(QString const &source)
+    {
+        v8::Locker _l(isolate);
+        v8::Isolate::Scope _i(isolate);
+        v8::Context::Scope _c(context);
+
+        v8::HandleScope _h;
+
+        v8::TryCatch tc;
+
+        v8::Handle<v8::Value> argv[] {
+            stringWrapper.toString(source)
+        };
+
+        v8::Local<v8::Value> value = compiler->Call(v8::Object::New(), 1, argv);
+
+        if(tc.HasCaught()) {
+            qFatal("%s", qPrintable(stringWrapper.toString(tc.Exception()->ToString())));
+        }
+
+        Q_ASSERT(!tc.HasCaught());
+
+        return stringWrapper.toString(value.As<v8::String>());
+    }
+} coffeeScriptEngine;
+
+QString QQmlEngine::translateScript(QString const &source, QString const &language)
+{
+    if (language == QLatin1String("coffeescript")) {
+        return coffeeScriptEngine.compile(source);
+    } else {
+        Q_ASSERT(false);
+        return source;
+    }
+}
+
 QT_END_NAMESPACE

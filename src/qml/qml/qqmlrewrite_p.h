@@ -61,6 +61,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class QQmlEngine;
+
 namespace QQmlRewrite {
 using namespace QQmlJS;
 
@@ -112,6 +114,7 @@ protected:
     virtual bool visit(AST::StringLiteral *ast);
     virtual bool visit(AST::Block *ast);
     virtual bool visit(AST::ExpressionStatement *ast);
+    virtual bool visit(AST::CoffeeScriptExpression *ast);
 
     virtual bool visit(AST::DoWhileStatement *ast);
     virtual void endVisit(AST::DoWhileStatement *ast);
@@ -174,6 +177,7 @@ protected:
     void accept(AST::Node *node);
     virtual bool visit(AST::StringLiteral *ast);
     virtual bool visit(AST::IdentifierExpression *);
+    virtual bool visit(AST::CoffeeScriptExpression *ast);
 
 private:
     QString createParameterString(const QList<QHashedString> &parameterNameList,

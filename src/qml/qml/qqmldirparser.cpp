@@ -220,8 +220,7 @@ bool QQmlDirParser::parse(const QString &source)
                     if (validVersionNumber) {
                         const QString &fileName = sections[2];
 
-                        if (fileName.endsWith(QLatin1String(".js"))) {
-                            // A 'js' extension indicates a namespaced script import
+                        if (QQmlFile::isScriptFileName(fileName)) {
                             const Script entry(sections[0], fileName, majorVersion, minorVersion);
                             _scripts.append(entry);
                         } else {

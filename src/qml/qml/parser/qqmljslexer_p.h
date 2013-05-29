@@ -244,6 +244,7 @@ private:
     bool _followsClosingBrace;
     bool _delimited;
     bool _qmlMode;
+    bool _followsStab;
 };
 
 } // end of namespace QQmlJS

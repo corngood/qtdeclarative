@@ -109,6 +109,14 @@ void NestedExpression::accept0(Visitor *visitor)
     visitor->endVisit(this);
 }
 
+void CoffeeScriptExpression::accept0(Visitor *visitor)
+{
+    if (visitor->visit(this)) {
+    }
+
+    visitor->endVisit(this);
+}
+
 void ThisExpression::accept0(Visitor *visitor)
 {
     if (visitor->visit(this)) {

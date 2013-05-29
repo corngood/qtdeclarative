@@ -109,6 +109,7 @@ Lexer::Lexer(Engine *engine)
     , _followsClosingBrace(false)
     , _delimited(true)
     , _qmlMode(true)
+    , _followsStab(false)
 {
     if (engine)
         engine->setLexer(this);
@@ -164,6 +165,8 @@ void Lexer::setCode(const QString &code, int lineno, bool qmlMode)
     _terminator = false;
     _followsClosingBrace = false;
     _delimited = true;
+
+    _followsStab = false;
 }
 
 void Lexer::scanChar()
@@ -236,6 +239,7 @@ int Lexer::lex()
     _delimited = false;
     _restrictedKeyword = false;
     _followsClosingBrace = (previousTokenKind == T_RBRACE);
+    _followsStab = false;
 
     // update the flags
     switch (_tokenKind) {
@@ -268,6 +272,10 @@ int Lexer::lex()
     case T_RETURN:
     case T_THROW:
         _restrictedKeyword = true;
+        break;
+
+    case T_STAB:
+        _followsStab = true;
         break;
     } // switch
 
@@ -416,6 +424,29 @@ int Lexer::scanToken()
 again:
     _validTokenText = false;
     _tokenLinePtr = _lastLinePtr;
+
+    if(_followsStab) {
+        const QChar *startCode = _codePtr;
+        int startColumn;
+        {
+            QChar const *c = startCode;
+            while((c++)->isSpace());
+            startColumn = c - _lastLinePtr;
+        }
+        while (!isLineTerminator()) scanChar ();
+        scanChar();
+        while (_codePtr <= _endPtr) {
+            if (!_char.isSpace()) {
+                if (tokenEndColumn() < startColumn) {
+                    _tokenSpell = _engine->midRef(startCode - _code.unicode() - 1, _lastLinePtr - startCode);
+                    return T_COFFEESCRIPT;
+                } else {
+                    while (!isLineTerminator()) scanChar();
+                    scanChar();
+                }
+            } else scanChar();
+        }
+    }
 
     while (_char.isSpace()) {
         if (unsigned sequenceLength = isLineTerminatorSequence()) {
@@ -616,6 +647,9 @@ again:
             }
 
             return T_MINUS_MINUS;
+        } else if (_char == QLatin1Char('>')) {
+            scanChar();
+            return T_STAB;
         }
         return T_MINUS;
 

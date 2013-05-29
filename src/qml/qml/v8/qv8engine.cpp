@@ -1535,21 +1535,16 @@ void QV8GCCallback::addGcCallbackNode(QV8GCCallback::Node *node)
 QV8Engine::ThreadData::ThreadData()
     : gcPrologueCallbackRegistered(false)
 {
-    if (!v8::Isolate::GetCurrent()) {
-        isolate = v8::Isolate::New();
-        isolate->Enter();
-    } else {
-        isolate = 0;
-    }
+    isolate = v8::Isolate::New();
+    locker = new v8::Locker(isolate);
+    isolate->Enter();
 }
 
 QV8Engine::ThreadData::~ThreadData()
 {
-    if (isolate) {
-        isolate->Exit();
-        isolate->Dispose();
-        isolate = 0;
-    }
+    isolate->Exit();
+    delete locker;
+    isolate->Dispose();
 }
 
 QT_END_NAMESPACE

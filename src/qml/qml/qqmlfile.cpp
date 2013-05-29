@@ -860,6 +860,11 @@ QString QQmlFile::bundleFileName(const QUrl &url, QQmlEngine *e)
     return QString();
 }
 
+bool QQmlFile::isScriptFileName(const QString &fileName) {
+    return fileName.endsWith(QLatin1String(".js")) ||
+        fileName.endsWith(QLatin1String(".coffee"));
+}
+
 QT_END_NAMESPACE
 
 #include "qqmlfile.moc"

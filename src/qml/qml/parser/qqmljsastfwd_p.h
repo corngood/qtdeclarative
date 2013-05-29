@@ -164,6 +164,7 @@ class FunctionSourceElement;
 class StatementSourceElement;
 class DebuggerStatement;
 class NestedExpression;
+class CoffeeScriptExpression;
 
 // ui elements
 class UiProgram;

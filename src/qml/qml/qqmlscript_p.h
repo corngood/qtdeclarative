@@ -357,8 +357,9 @@ public:
     // Script blocks that were nested under this object
     struct ScriptBlock {
         enum Pragma { 
-            None   = 0x00000000,
-            Shared = 0x00000001
+            None   = 0,
+            Shared = 1 << 0,
+            Language = 1 << 1
         };
         Q_DECLARE_FLAGS(Pragmas, Pragma)
 
@@ -486,6 +487,7 @@ public:
 
         QQmlScript::Object::ScriptBlock::Pragmas pragmas;
         QList<Import> imports;
+        QString language;
     };
 
     static QQmlScript::Object::ScriptBlock::Pragmas extractPragmas(QString &);

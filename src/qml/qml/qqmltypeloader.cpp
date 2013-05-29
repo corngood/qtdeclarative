@@ -55,6 +55,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qmutex.h>
 #include <QtCore/qthread.h>
+#include <QtCore/qprocess.h>
 #include <QtQml/qqmlfile.h>
 #include <QtCore/qdiriterator.h>
 #include <QtQml/qqmlcomponent.h>
@@ -2384,7 +2385,10 @@ void QQmlScriptBlob::done()
     m_imports.populateCache(m_scriptData->importCache);
 
     m_scriptData->pragmas = m_metadata.pragmas;
-    m_scriptData->m_programSource = m_source.toUtf8();
+    QString source = m_source;
+    if (m_metadata.pragmas & QQmlScript::Object::ScriptBlock::Language)
+        source = QQmlEngine::translateScript (source, m_metadata.language);
+    m_scriptData->m_programSource = source.toUtf8();
     m_source.clear();
 }
 

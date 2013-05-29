@@ -204,6 +204,7 @@ public:
         Kind_WhileStatement,
         Kind_WithStatement,
         Kind_NestedExpression,
+        Kind_CoffeeScriptExpression,
 
         Kind_UiArrayBinding,
         Kind_UiImport,
@@ -285,6 +286,27 @@ public:
     ExpressionNode *expression;
     SourceLocation lparenToken;
     SourceLocation rparenToken;
+};
+
+class QML_PARSER_EXPORT CoffeeScriptExpression: public Statement
+{
+public:
+    QQMLJS_DECLARE_AST_NODE(CoffeeScriptExpression)
+
+    CoffeeScriptExpression(const QStringRef &v):
+        value (v) { kind = K; }
+
+    virtual void accept0(Visitor *visitor);
+
+    virtual SourceLocation firstSourceLocation() const
+    { return token; }
+
+    virtual SourceLocation lastSourceLocation() const
+    { return token; }
+
+// attributes:
+    QStringRef value;
+    SourceLocation token;
 };
 
 class QML_PARSER_EXPORT ThisExpression: public ExpressionNode
